@@ -3,6 +3,9 @@ using System.Drawing;
 
 namespace Menu
 {
+    /// <summary>
+    /// Represents an option with a title, color, (sometimes) a path to a submenu, and (sometimes) an action.
+    /// </summary>
     internal class Option
     {
         private string _name;
@@ -10,6 +13,12 @@ namespace Menu
         private string _name_into;
         private Action _action;
         private bool _has_action = false;
+        /// <summary>
+        /// Creats a special option with a title, (sometimes) a path, and (sometimes) an action.
+        /// </summary>
+        /// <param name="name">The option's title.</param>
+        /// <param name="name_into">(Sometimes) the path to a submenu.</param>
+        /// <exception cref="ArgumentException">Throws an exception when the title option is not valid.</exception>
         public Option(string name, string name_into)
         {
             if (name == "Quit")
@@ -30,12 +39,23 @@ namespace Menu
                 throw new ArgumentException("Can not make option, because invalid \"name\".");
             }
         }
+        /// <summary>
+        /// Creats an option with a title, a color, and a path.
+        /// </summary>
+        /// <param name="name">The option's title.</param>
+        /// <param name="color">The option's color.</param>
         public Option(string name, Color color)
         {
             _name = name;
             _name_into = _name;
             _color = color;
         }
+        /// <summary>
+        /// Creats an option with a title, a color, and a action.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="color"></param>
+        /// <param name="action"></param>
         public Option(string name, Color color, Action action)
         {
             _name = name;

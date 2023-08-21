@@ -1,20 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using static Colorful.Console;
 
 namespace Menu
 {
+    /// <summary>
+    /// Represents a Menus type with a list which contains menus.
+    /// </summary>
     internal class Menus
     {
         private List<Menu> _menuList;
         private Menu _menu;
         private Menu _backup_menu;
+        /// <summary>
+        /// Creats a Menus 
+        /// </summary>
+        /// <param name="menus">A list of Menus.</param>
         public Menus(List<Menu> menus)
         {
             _menuList = menus;
             _menu = _menuList[0];
         }
+        /// <summary>
+        /// Runs through the list of Menu and their options.
+        /// </summary>
         public void Run()
         {
             do

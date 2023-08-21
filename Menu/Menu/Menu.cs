@@ -5,18 +5,31 @@ using static Colorful.Console;
 
 namespace Menu
 {
+    /// <summary>
+    /// Represents a Menu with a title, color, and options.
+    /// </summary>
     internal class Menu
     {
         private string _name;
         private Color _color;
         private List<Option> _options;
         private int _selected = 0;
+
+        /// <summary>
+        /// Creats a Menu with 3 parameters.
+        /// </summary>
+        /// <param name="name">The Menu's title.</param>
+        /// <param name="color">The Menu's title's color.</param>
+        /// <param name="options">A options list which contains Menu's options.</param>
         public Menu(string name, Color color, List<Option> options)
         {
             _name = name;
             _color = color;
             _options = options;
         }
+        /// <summary>
+        /// Updates/Writes out the Menu.
+        /// </summary>
         public void Update()
         {
             Clear();
@@ -45,6 +58,10 @@ namespace Menu
                 }                
             }
         }
+        /// <summary>
+        /// Steps through the options with up/down arrows and/or w/s.
+        /// </summary>
+        /// <returns>The selected option's index.</returns>
         public int Stepper()
         {
             ConsoleKey key;
