@@ -1,125 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading.Tasks;
 using static Colorful.Console;
 
 namespace Menu
 {
     internal class Menu
     {
-        private int _depth = 0;
         private string _name;
         private Color _color;
-        private Color _color_w_back;
-        private static List<Menu> _children = new List<Menu>();
-        private static int _child_index_selected = 0;
-        private Task _task;
-        private bool _has_task = false;
-        public Menu(string name, Color color, List<Menu> children)
+        private List<Option> _options;
+        private int _selected = 0;
+        public Menu(string name, Color color, List<Option> options)
         {
             _name = name;
             _color = color;
-            _children = children;
-        }
-        public Menu(string name, Color color, Task task)
-        {
-            _name = name;
-            _color = color;
-            _task = task;
-            _has_task = true;
-        }
-        public Menu()
-        {
-            _name = "[]";
-            _color = Color.White;
-        }
-        public Menu(bool mm)
-        {
-            if (mm)
-            {
-                _name = "Quit";
-                _color = Color.Red;
-                _task = new Task(() => Environment.Exit(0));
-            }
-            else
-            {
-                _name = "Back";
-                _color = Color.Yellow;
-            }
-        }
-        public void Addchild(Menu child)
-        {
-            _children.Add(child);
-        }
-        public void SetColor(Color color)
-        {
-            _color = color;
+            _options = options;
         }
         public void Update()
         {
             Clear();
-            for (int i = 0; i < _children.Count; i++)
+            WriteLine(Name + "\n", Color);
+            for (int i = 0; i < Options.Count; i++)
             {
-                if (_child_index_selected == i)
+                if (i != Selected)
                 {
-                    if (_children[_child_index_selected].Color.GetBrightness() <= 0.5)
+                    WriteLine("  " + Options[i].Name, Options[i].Color);
+                }
+                else
+                {
+                    Color bc = Options[i].Color;
+                    Color fc;
+                    if (Color.GetBrightness() <= 0.5)
                     {
-                        _color_w_back = Color.White;
-                        BackgroundColor = _children[_child_index_selected].Color;
+                        fc = Color.White;
                     }
                     else
                     {
-                        BackgroundColor = _children[_child_index_selected].Color;
-                        _color_w_back = Color.Black;
+                        fc= Color.Black;
                     }
-                    WriteLine(_children[i].Name, _children[i].Color_w_back);
+                    BackgroundColor = bc;
+                    WriteLine(Options[i].Name, fc);
                     BackgroundColor = Color.FromArgb(12, 12, 12);
-                }
-                else
-                {
-                    WriteLine(_children[i].Name, _children[i].Color);
-                }
+                }                
             }
         }
-        public void Stepper(ConsoleKey key)
+        public int Stepper()
         {
-            if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
+            ConsoleKey key;
+            do
             {
-                if (_child_index_selected == 0)
+                Update();
+                key = ReadKey().Key;
+                if (key == ConsoleKey.UpArrow || key == ConsoleKey.W)
                 {
-                    _child_index_selected = _children.Count - 1;
+                    if (Selected == 0)
+                    {
+                        _selected = Options.Count - 1;
+                    }
+                    else
+                    {
+                        _selected--;
+                    }
                 }
-                else
+                else if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
                 {
-                    _child_index_selected--;
+                    if (Selected == Options.Count - 1)
+                    {
+                        _selected = 0;
+                    }
+                    else
+                    {
+                        _selected++;
+                    }
                 }
-            }
-            else if (key == ConsoleKey.DownArrow || key == ConsoleKey.S)
-            {
-                if (_child_index_selected == _children.Count - 1)
-                {
-                    _child_index_selected = 0;
-                }
-                else
-                {
-                    _child_index_selected++;
-                }
-            }
-            else if (key == ConsoleKey.Enter)
-            {
-                if (_children[_child_index_selected].Name == "Back")
-                {
-                    _depth--;
-                }
-            }
-            Update();
+            } while (key != ConsoleKey.Enter);
+            return Selected;
         }
         public string Name { get => _name; }
-        public Color Color { get => _color; set => _color = value; }
-        internal List<Menu> Children { get => _children; }
-        public Color Color_w_back { get => _color_w_back; }
-        public bool Has_Task { get => _has_task; }
-        public Task Task { get => _task; }
+        public Color Color { get => _color; }
+        public int Selected { get => _selected; }
+        internal List<Option> Options { get => _options; }
     }
 }

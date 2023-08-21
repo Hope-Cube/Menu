@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Menu.cs" />
     <Compile Include="Menus.cs" />
+    <Compile Include="Option.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

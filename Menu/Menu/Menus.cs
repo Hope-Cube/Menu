@@ -1,43 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using static Colorful.Console;
 
 namespace Menu
 {
     internal class Menus
     {
-        private List<Menu> _menus;
-        private int _current_depth = 0;
+        private List<Menu> _menuList;
+        private Menu _menu;
+        private Menu _backup_menu;
         public Menus(List<Menu> menus)
         {
-            _menus = menus;
+            _menuList = menus;
+            _menu = _menuList[0];
         }
-        public void AddMenu(Menu menu)
+        public void Run()
         {
-            _menus.Add(menu);
-        }
-        public void Step()
-        {
-            Menu menu = _menus[_current_depth];
-            menu.Update();
-            ConsoleKey key = ReadKey().Key;
-            if (key == ConsoleKey.Enter)
-            {
-                if (menu.Has_Task)
+            do
+            {           
+                if (_menu == null)
                 {
-                    menu.Task.Start();
+                    _menu = _backup_menu;
+                }     
+                int s = _menu.Stepper();
+                if (!_menu.Options[s].Has_action)
+                {
+                    _backup_menu = _menu;
+                    WriteLine(_menu.Options[s].Name_into);
+                    _menu = _menuList.Find(x => x.Name == _menu.Options[s].Name_into);
                 }
                 else
                 {
-                    _current_depth++;
+                    _menu.Options[s].Action.Invoke();
                 }
-            }
-            else
-            {
-                menu.Stepper(key);
-            }
+            } while (true);
         }
-        public int Current_depth { get => _current_depth; }
-        internal List<Menu> Menus_ { get => _menus; }
+        internal List<Menu> MenuList { get => _menuList; set => _menuList = value; }
     }
 }
